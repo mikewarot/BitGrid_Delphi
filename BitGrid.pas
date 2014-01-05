@@ -14,6 +14,8 @@ procedure Compute_A;
 
 procedure Compute_B;
 
+function GetHex(var s : string):integer;   // gets a hex string, killing any leading spaces
+
 implementation
 
 
@@ -62,6 +64,27 @@ begin
         outs[x,y] := (cells[x,y] shr index) AND $01;
       end;
 end;
+
+
+function GetHex(var s : string):integer;
+var
+  x : integer;
+begin
+  x := 0;
+  while (length(s) > 0) AND (s[1] = ' ') do delete(s,1,1);   // strip off leading spaces
+  while (length(s) > 0) AND (s[1] in ['0'..'9','A'..'F','a'..'f']) do
+  begin
+    case s[1] of
+      '0'..'9' : x := (x * 16)      + (ord(s[1])-ord('0'));
+      'A'..'F' : x := (x * 16) + 10 + (ord(s[1])-ord('A'));
+      'a'..'f' : x := (x * 16) + 10 + (ord(s[1])-ord('a'));
+    end;
+    delete(s,1,1);
+  end;
+  gethex := x;
+end;
+
+
 
 //  $ff00  --- anything from the left
 //  $f0f0  --- anything from below
