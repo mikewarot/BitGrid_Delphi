@@ -10,6 +10,7 @@ object Form1: TForm1
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -70,5 +71,38 @@ object Form1: TForm1
     Caption = 'FROM Memo'
     TabOrder = 5
     OnClick = Button4Click
+  end
+  object MainMenu1: TMainMenu
+    Left = 8
+    Top = 32
+    object File1: TMenuItem
+      Caption = '&File'
+      object Open1: TMenuItem
+        Caption = '&Open'
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object Save1: TMenuItem
+        Caption = '&Save'
+      end
+      object SaveAs1: TMenuItem
+        Caption = 'Save &As'
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Exit1: TMenuItem
+        Caption = 'E&xit'
+        OnClick = Exit1Click
+      end
+    end
+    object Help1: TMenuItem
+      Caption = '&Help'
+      object AboutBitGrid1: TMenuItem
+        Caption = '&About BitGrid'
+        OnClick = AboutBitGrid1Click
+      end
+    end
   end
 end

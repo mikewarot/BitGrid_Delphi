@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Mask, BitGrid;
+  Dialogs, StdCtrls, Mask, BitGrid, Menus;
 
 type
   TForm1 = class(TForm)
@@ -14,18 +14,32 @@ type
     Memo2: TMemo;
     Button3: TButton;
     Button4: TButton;
+    MainMenu1: TMainMenu;
+    File1: TMenuItem;
+    Open1: TMenuItem;
+    N1: TMenuItem;
+    Save1: TMenuItem;
+    SaveAs1: TMenuItem;
+    N2: TMenuItem;
+    Exit1: TMenuItem;
+    Help1: TMenuItem;
+    AboutBitGrid1: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Memo2Exit(Sender: TObject);
+    procedure AboutBitGrid1Click(Sender: TObject);
+    procedure Exit1Click(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+const
+  VersionString : String = '0.03';
 var
   Form1: TForm1;
 
@@ -66,6 +80,11 @@ begin
     form1.Memo1.lines.Append(s);
   end; // for y
 end; // dump_stuff
+
+procedure TForm1.AboutBitGrid1Click(Sender: TObject);
+begin
+  ShowMessage('BitGrid Simulator - Version '+VersionString);
+end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -118,6 +137,11 @@ begin
     for x := 0 to wrap-1 do
       cells[x,y] := gethex(s);
   end; // for y
+end;
+
+procedure TForm1.Exit1Click(Sender: TObject);
+begin
+  Application.Terminate;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
