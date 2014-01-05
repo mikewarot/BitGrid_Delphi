@@ -97,6 +97,13 @@ object Form1: TForm1
         OnClick = Exit1Click
       end
     end
+    object ools1: TMenuItem
+      Caption = '&Tools'
+      object Run1: TMenuItem
+        Caption = '&Run'
+        OnClick = Run1Click
+      end
+    end
     object Help1: TMenuItem
       Caption = '&Help'
       object AboutBitGrid1: TMenuItem
@@ -104,5 +111,12 @@ object Form1: TForm1
         OnClick = AboutBitGrid1Click
       end
     end
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = Timer1Timer
+    Left = 632
+    Top = 360
   end
 end

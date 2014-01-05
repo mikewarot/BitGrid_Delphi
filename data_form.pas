@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Mask, BitGrid, Menus;
+  Dialogs, StdCtrls, Mask, BitGrid, Menus, ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -24,6 +24,9 @@ type
     Exit1: TMenuItem;
     Help1: TMenuItem;
     AboutBitGrid1: TMenuItem;
+    Timer1: TTimer;
+    ools1: TMenuItem;
+    Run1: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -32,6 +35,8 @@ type
     procedure Memo2Exit(Sender: TObject);
     procedure AboutBitGrid1Click(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure Run1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -103,6 +108,19 @@ begin
     for x := 0 to wrap-1 do
       cells[x,y] := gethex(s);
   end; // for y
+end;
+
+procedure TForm1.Run1Click(Sender: TObject);
+begin
+ Run1.Checked := NOT Run1.Checked;
+ Timer1.Enabled := Run1.Checked;
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  Compute_A;
+  Compute_B;
+  dump_stuff;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
