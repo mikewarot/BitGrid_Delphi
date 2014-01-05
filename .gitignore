@@ -12,4 +12,4 @@ __history
 *.so
 *.apk
 bin/*
-debug/*
+Debug/*
