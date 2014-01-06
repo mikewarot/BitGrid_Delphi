@@ -28,6 +28,7 @@ type
     ools1: TMenuItem;
     Run1: TMenuItem;
     StatusBar1: TStatusBar;
+    SaveDialog1: TSaveDialog;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -38,6 +39,7 @@ type
     procedure Exit1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Run1Click(Sender: TObject);
+    procedure SaveAs1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -48,6 +50,7 @@ const
   VersionString : String = '0.03';
 var
   Form1: TForm1;
+  CurrentFileName : String = '';
 
 implementation
 
@@ -88,6 +91,7 @@ begin
 
   form1.statusbar1.panels[0].text := 'Cycles : '+IntToStr(cycles);
   form1.StatusBar1.Panels[1].Text := 'Time   : '+FloatToStr(cycles / 1000.0)+' uSec';
+  form1.StatusBar1.Panels[2].Text := CurrentFileName+ '        '; // accomodate junk in lower right corner
 end; // dump_stuff
 
 procedure TForm1.AboutBitGrid1Click(Sender: TObject);
@@ -118,6 +122,15 @@ procedure TForm1.Run1Click(Sender: TObject);
 begin
  Run1.Checked := NOT Run1.Checked;
  Timer1.Enabled := Run1.Checked;
+end;
+
+procedure TForm1.SaveAs1Click(Sender: TObject);
+begin
+  If SaveDialog1.Execute then
+  begin
+    CurrentFileName := SaveDialog1.FileName;
+    SaveTo(CurrentFileName);
+  end;
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);

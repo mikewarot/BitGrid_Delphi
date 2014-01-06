@@ -17,8 +17,12 @@ procedure Compute_B;
 
 function GetHex(var s : string):integer;   // gets a hex string, killing any leading spaces
 
+procedure SaveTo(filename : string);
+
 implementation
 
+uses
+  sysutils;
 
 procedure compute_a;
 var
@@ -85,6 +89,24 @@ begin
     delete(s,1,1);
   end;
   gethex := x;
+end;
+
+procedure SaveTo(filename : string);
+var
+  f : text;
+  s : string;
+  x,y : integer;
+begin
+  assign(f,filename);
+  rewrite(f);
+  for y := 0 to wrap-1 do
+  begin
+    s := '';
+    for x := 0 to wrap-1 do
+      s := s + inttohex(cells[x,y],4) + ' ';
+    writeln(f,s);
+  end; // for y
+  close(f);
 end;
 
 

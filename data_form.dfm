@@ -79,10 +79,14 @@ object Form1: TForm1
     Height = 19
     Panels = <
       item
+        Width = 100
+      end
+      item
         Width = 180
       end
       item
-        Width = 50
+        Alignment = taRightJustify
+        Width = 0
       end>
   end
   object MainMenu1: TMainMenu
@@ -101,6 +105,7 @@ object Form1: TForm1
       end
       object SaveAs1: TMenuItem
         Caption = 'Save &As'
+        OnClick = SaveAs1Click
       end
       object N2: TMenuItem
         Caption = '-'
@@ -130,5 +135,13 @@ object Form1: TForm1
     OnTimer = Timer1Timer
     Left = 632
     Top = 360
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = 'bitgrid'
+    FileName = 'default'
+    Filter = '*.bitgrid'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Left = 8
+    Top = 88
   end
 end
