@@ -84,9 +84,6 @@ object Form1: TForm1
       item
         Width = 50
       end>
-    ExplicitLeft = 448
-    ExplicitTop = 440
-    ExplicitWidth = 0
   end
   object MainMenu1: TMainMenu
     Left = 8
@@ -130,7 +127,6 @@ object Form1: TForm1
   end
   object Timer1: TTimer
     Enabled = False
-    Interval = 5000
     OnTimer = Timer1Timer
     Left = 632
     Top = 360

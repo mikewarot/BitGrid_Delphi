@@ -87,6 +87,7 @@ begin
   end; // for y
 
   form1.statusbar1.panels[0].text := 'Cycles : '+IntToStr(cycles);
+  form1.StatusBar1.Panels[1].Text := 'Time   : '+FloatToStr(cycles / 1000.0)+' uSec';
 end; // dump_stuff
 
 procedure TForm1.AboutBitGrid1Click(Sender: TObject);
@@ -121,8 +122,6 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
-  Compute_A;
-  Compute_B;
   dump_stuff;
 end;
 
