@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Bitgrid Simulator v0.02'
-  ClientHeight = 434
+  ClientHeight = 465
   ClientWidth = 773
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -71,6 +71,22 @@ object Form1: TForm1
     Caption = 'FROM Memo'
     TabOrder = 5
     OnClick = Button4Click
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 446
+    Width = 773
+    Height = 19
+    Panels = <
+      item
+        Width = 180
+      end
+      item
+        Width = 50
+      end>
+    ExplicitLeft = 448
+    ExplicitTop = 440
+    ExplicitWidth = 0
   end
   object MainMenu1: TMainMenu
     Left = 8

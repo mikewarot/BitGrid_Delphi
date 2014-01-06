@@ -9,6 +9,7 @@ var
   cells : array[0..7,0..7] of integer;
   outs  : array[0..7,0..7] of integer;
   ins   : array[0..7,0..7] of integer;
+  cycles : longint;
 
 procedure Compute_A;
 
@@ -40,6 +41,8 @@ begin
         ins[x,y] := index;
         outs[x,y] := (cells[x,y] shr index) AND $01;
       end;
+  inc(cycles);
+
 end;
 
 procedure compute_b;
@@ -94,6 +97,7 @@ end;
 var
   x,y : integer;
 initialization
+  cycles := 0;
   for x := 0 to wrap-1 do
     for y := 0 to wrap-1 do
     begin

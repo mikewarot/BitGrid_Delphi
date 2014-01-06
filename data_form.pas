@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Mask, BitGrid, Menus, ExtCtrls;
+  Dialogs, StdCtrls, Mask, BitGrid, Menus, ExtCtrls, ComCtrls;
 
 type
   TForm1 = class(TForm)
@@ -27,6 +27,7 @@ type
     Timer1: TTimer;
     ools1: TMenuItem;
     Run1: TMenuItem;
+    StatusBar1: TStatusBar;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -84,6 +85,8 @@ begin
       s := s + inttohex(outs[x,y],4) + ' ';
     form1.Memo1.lines.Append(s);
   end; // for y
+
+  form1.statusbar1.panels[0].text := 'Cycles : '+IntToStr(cycles);
 end; // dump_stuff
 
 procedure TForm1.AboutBitGrid1Click(Sender: TObject);
