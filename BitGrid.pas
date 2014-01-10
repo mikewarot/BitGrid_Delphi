@@ -5,15 +5,15 @@ uses
   classes;
 
 
-procedure Compute_A;
+procedure Compute_A;                       // does all the computing for set A
 
-procedure Compute_B;
+procedure Compute_B;                       // does all the computing for set B
 
 function GetHex(var s : string):integer;   // gets a hex string, killing any leading spaces
 
-procedure SaveTo(filename : string);
+procedure SaveTo(filename : string);       // saves the program to a file
 
-function GetCycleCount : LongInt;
+function  GetCycleCount : LongInt;         // how many cycles have we comptued so far?
 
 procedure DumpStateTo(o : TStrings);       // dump the current cells, inputs, outputs to a list
 
