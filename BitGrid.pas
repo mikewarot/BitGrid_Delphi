@@ -29,11 +29,16 @@ uses
 const
   wrap = 8;
 
+type
+  TBitGridCell = Class(TObject)
+    Instruction : integer;
+    Index       : integer;
+    Result      : integer;
+  End;
+
 var
   cycles : longint;
-  cells : array[0..wrap-1,0..wrap-1] of integer;
-  outs  : array[0..wrap-1,0..wrap-1] of integer;
-  ins   : array[0..wrap-1,0..wrap-1] of integer;
+  cells : array[0..wrap-1,0..wrap-1] of TBitGridCell;
 
 procedure compute_a;
 var
@@ -45,16 +50,16 @@ begin
       if ((x+y) mod 2) = 0 then   // only do  phase 1 cells
       begin
         index := 0;
-        index := index OR (outs[(x+Wrap-1) mod Wrap,y] shl 3);  // left of here * 8
-        index := index OR (outs[x,(y+1) mod Wrap] shl 2);       // below here * 4
-        index := index OR (outs[(x+1) mod Wrap,y] shl 1);       // right * 2
-        index := index OR (outs[x,(y+Wrap-1) mod Wrap]);         // above here
+        index := index OR (cells[(x+Wrap-1) mod Wrap,y].Result shl 3);  // left of here * 8
+        index := index OR (cells[x,(y+1) mod Wrap].Result shl 2);       // below here * 4
+        index := index OR (cells[(x+1) mod Wrap,y].Result shl 1);       // right * 2
+        index := index OR (cells[x,(y+Wrap-1) mod Wrap].Result);         // above here
         // figure out the input bits
         // this gets complicated... skip for right now....
 
         // output is the cell programming shr by the index
-        ins[x,y] := index;
-        outs[x,y] := (cells[x,y] shr index) AND $01;
+        cells[x,y].index := index;
+        cells[x,y].result := (cells[x,y].Instruction shr index) AND $01;
       end;
   inc(cycles);
 
@@ -70,16 +75,16 @@ begin
       if ((x+y) mod 2) <> 0 then   // only do  phase 2 cells
       begin
         index := 0;
-        index := index OR (outs[(x+Wrap-1) mod Wrap,y] shl 3);  // left of here * 8
-        index := index OR (outs[x,(y+1) mod Wrap] shl 2);       // below here * 4
-        index := index OR (outs[(x+1) mod Wrap,y] shl 1);       // right * 2
-        index := index OR (outs[x,(y+Wrap-1) mod Wrap]);         // above here
+        index := index OR (cells[(x+Wrap-1) mod Wrap,y].Result shl 3);  // left of here * 8
+        index := index OR (cells[x,(y+1) mod Wrap].Result shl 2);       // below here * 4
+        index := index OR (cells[(x+1) mod Wrap,y].Result shl 1);       // right * 2
+        index := index OR (cells[x,(y+Wrap-1) mod Wrap].Result);         // above here
         // figure out the input bits
         // this gets complicated... skip for right now....
 
         // output is the cell programming shr by the index
-        ins[x,y] := index;
-        outs[x,y] := (cells[x,y] shr index) AND $01;
+        cells[x,y].index := index;
+        cells[x,y].result := (cells[x,y].Instruction shr index) AND $01;
       end;
 end;
 
@@ -114,7 +119,7 @@ begin
   begin
     s := '';
     for x := 0 to wrap-1 do
-      s := s + inttohex(cells[x,y],4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction,4) + ' ';
     writeln(f,s);
   end; // for y
   close(f);
@@ -136,7 +141,7 @@ begin
   begin
     s := '';
     for x := 0 to wrap-1 do
-      s := s + inttohex(cells[x,y],4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction,4) + ' ';
     o.Append(s);
   end; // for y
 
@@ -145,7 +150,7 @@ begin
   begin
     s := '';
     for x := 0 to wrap-1 do
-      s := s + inttohex(ins[x,y],4) + ' ';
+      s := s + inttohex(cells[x,y].Index,4) + ' ';
     o.Append(s);
   end; // for y
 
@@ -154,7 +159,7 @@ begin
   begin
     s := '';
     for x := 0 to wrap-1 do
-      s := s + inttohex(outs[x,y],4) + ' ';
+      s := s + inttohex(cells[x,y].Result,4) + ' ';
     o.Append(s);
   end; // for y
 end;
@@ -168,7 +173,7 @@ begin
   begin
     s := o.Strings[y];
     for x := 0 to wrap-1 do
-      cells[x,y] := gethex(s);
+      cells[x,y].Instruction := gethex(s);
   end; // for y
 end;
 
@@ -182,7 +187,7 @@ begin
   begin
     s := '';
     for x := 0 to wrap-1 do
-      s := s + ' ' + inttohex(cells[x,y],4);
+      s := s + ' ' + inttohex(cells[x,y].Instruction,4);
     o.Append(s);
   end; // for y
 end;
@@ -199,8 +204,14 @@ initialization
   for x := 0 to wrap-1 do
     for y := 0 to wrap-1 do
     begin
-      ins[x,y] := 0;
-      outs[x,y] := 0;
-      cells[x,y] := $ff00;
+      cells[x,y] := TBitGridCell.Create;   // set up the cell
+      {
+        This isn't kosher, but works for now... we're directly stuffing
+        values into the internal fields of an object, instead
+        of letting it set itself up. This is transistion code that should go away
+      }
+      cells[x,y].Instruction := $ff00;     // default to just copy from the left
+      cells[x,y].Index := 0;
+      cells[x,y].Result := 0;
     end;
 end.
