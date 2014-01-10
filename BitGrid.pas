@@ -26,9 +26,6 @@ implementation
 uses
   sysutils;
 
-const
-  wrap = 8;
-
 type
   TBitGridCell = Class(TObject)
     Instruction : integer;
@@ -36,6 +33,9 @@ type
     Result      : integer;
     Constructor Create;
   End;
+
+const
+  wrap = 8;
 
 var
   cycles : longint;
@@ -96,7 +96,7 @@ var
 begin
   x := 0;
   while (length(s) > 0) AND (s[1] = ' ') do delete(s,1,1);   // strip off leading spaces
-  while (length(s) > 0) AND (s[1] in ['0'..'9','A'..'F','a'..'f']) do
+  while (length(s) > 0) AND CharInSet(s[1],['0'..'9','A'..'F','a'..'f']) do
   begin
     case s[1] of
       '0'..'9' : x := (x * 16)      + (ord(s[1])-ord('0'));
@@ -211,7 +211,5 @@ initialization
   cycles := 0;
   for x := 0 to wrap-1 do
     for y := 0 to wrap-1 do
-    begin
       cells[x,y] := TBitGridCell.Create;   // set up the cell
-    end;
 end.
