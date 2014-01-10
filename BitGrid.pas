@@ -30,14 +30,17 @@ type
   TBitGridCell = Class(TObject)
     Instruction : integer;
     Index       : integer;
-    Result      : integer;
+    Inputs      : Array[0..3] of ^Boolean;  // allow for non-uniform stuff later
+    Outputs     : Array[0..3] of Boolean;
     Constructor Create;
+    Procedure   Compute;                    // have it do its own computation
   End;
 
 const
   xsize = 6;
   ysize = 5;
-
+  alwaysfalse : boolean = false;    // default to this for inputs
+  alwaystrue  : boolean = true;
 
 var
   cycles : longint;
@@ -51,21 +54,8 @@ begin
   for x := 0 to xsize-1 do
     for y := 0 to ysize-1 do
       if ((x+y) mod 2) = 0 then   // only do  phase 1 cells
-      begin
-        index := 0;
-        index := index OR (cells[(x+xsize-1) mod xsize,y].Result shl 3);   // left of here * 8
-        index := index OR (cells[x,(y+1) mod ysize].Result shl 2);         // below here * 4
-        index := index OR (cells[(x+1) mod xsize,y].Result shl 1);         // right * 2
-        index := index OR (cells[x,(y+ysize-1) mod ysize].Result);         // above here
-        // figure out the input bits
-        // this gets complicated... skip for right now....
-
-        // output is the cell programming shr by the index
-        cells[x,y].index := index;
-        cells[x,y].result := (cells[x,y].Instruction shr index) AND $01;
-      end;
+        cells[x,y].compute;
   inc(cycles);
-
 end;
 
 procedure compute_b;
@@ -77,17 +67,7 @@ begin
     for y := 0 to ysize-1 do
       if ((x+y) mod 2) <> 0 then   // only do  phase 2 cells
       begin
-        index := 0;
-        index := index OR (cells[(x+xsize-1) mod xsize,y].Result shl 3);   // left of here * 8
-        index := index OR (cells[x,(y+1) mod ysize].Result shl 2);         // below here * 4
-        index := index OR (cells[(x+1) mod xsize,y].Result shl 1);         // right * 2
-        index := index OR (cells[x,(y+ysize-1) mod ysize].Result);         // above here
-        // figure out the input bits
-        // this gets complicated... skip for right now....
-
-        // output is the cell programming shr by the index
-        cells[x,y].index := index;
-        cells[x,y].result := (cells[x,y].Instruction shr index) AND $01;
+        cells[x,y].compute;
       end;
 end;
 
@@ -162,7 +142,7 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
-      s := s + inttohex(cells[x,y].Result,4) + ' ';
+      s := s + BoolToStr(cells[x,y].Outputs[0]) + ' ';
     o.Append(s);
   end; // for y
 end;
@@ -199,8 +179,26 @@ Constructor TBitGridCell.Create;
 begin
   Instruction := $ff00;     // default to copy from left input
   Index       := 0;
-  Result := 0;
+  Inputs[3] := @AlwaysFalse; // left- default to a false input, for safety.
+  Inputs[2] := @AlwaysFalse; // below
+  Inputs[1] := @AlwaysFalse; // right
+  Inputs[0] := @AlwaysFalse; // above
 end;
+
+Procedure   TBitGridCell.Compute;
+begin
+  index := 1;
+  if inputs[3]^ then index := index shl 8;
+  if inputs[2]^ then index := index shl 4;
+  if inputs[1]^ then index := index shl 2;
+  if inputs[0]^ then index := index shl 1;
+
+  Outputs[3] := (index AND (instruction)) <> 0;
+  Outputs[2] := (index AND (instruction)) <> 0;
+  Outputs[1] := (index AND (instruction)) <> 0;
+  Outputs[0] := (index AND (instruction)) <> 0;
+end;
+
 
 //  $ff00  --- anything from the left
 //  $f0f0  --- anything from below
@@ -214,4 +212,14 @@ initialization
   for x := 0 to xsize-1 do
     for y := 0 to ysize-1 do
       cells[x,y] := TBitGridCell.Create;   // set up the cell
+
+  for x := 0 to xsize-1 do
+    for y := 0 to ysize-1 do
+    begin
+      cells[x,y].Inputs[3] := @cells[(x+xsize-1) mod xsize,y].Outputs[1];   // hook up left side input
+      cells[x,y].Inputs[1] := @cells[(x+1)       mod xsize,y].Outputs[3];   // hook up right side
+      cells[x,y].Inputs[2] := @cells[x,(y+ysize-1) mod ysize].Outputs[0];   // hook up bottomm side
+      cells[x,y].Inputs[0] := @cells[x,(y+1)       mod ysize].Outputs[2];   // hook up top side
+    end; // for y
+
 end.
