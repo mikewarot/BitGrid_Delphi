@@ -35,26 +35,28 @@ type
   End;
 
 const
-  wrap = 8;
+  xsize = 6;
+  ysize = 5;
+
 
 var
   cycles : longint;
-  cells : array[0..wrap-1,0..wrap-1] of TBitGridCell;
+  cells : array[0..xsize-1,0..ysize-1] of TBitGridCell;
 
 procedure compute_a;
 var
   x,y : integer;
   index   : integer;
 begin
-  for x := 0 to wrap-1 do
-    for y := 0 to wrap-1 do
+  for x := 0 to xsize-1 do
+    for y := 0 to ysize-1 do
       if ((x+y) mod 2) = 0 then   // only do  phase 1 cells
       begin
         index := 0;
-        index := index OR (cells[(x+Wrap-1) mod Wrap,y].Result shl 3);  // left of here * 8
-        index := index OR (cells[x,(y+1) mod Wrap].Result shl 2);       // below here * 4
-        index := index OR (cells[(x+1) mod Wrap,y].Result shl 1);       // right * 2
-        index := index OR (cells[x,(y+Wrap-1) mod Wrap].Result);         // above here
+        index := index OR (cells[(x+xsize-1) mod xsize,y].Result shl 3);   // left of here * 8
+        index := index OR (cells[x,(y+1) mod ysize].Result shl 2);         // below here * 4
+        index := index OR (cells[(x+1) mod xsize,y].Result shl 1);         // right * 2
+        index := index OR (cells[x,(y+ysize-1) mod ysize].Result);         // above here
         // figure out the input bits
         // this gets complicated... skip for right now....
 
@@ -71,15 +73,15 @@ var
   x,y : integer;
   index   : integer;
 begin
-  for x := 0 to wrap-1 do
-    for y := 0 to wrap-1 do
+  for x := 0 to xsize-1 do
+    for y := 0 to ysize-1 do
       if ((x+y) mod 2) <> 0 then   // only do  phase 2 cells
       begin
         index := 0;
-        index := index OR (cells[(x+Wrap-1) mod Wrap,y].Result shl 3);  // left of here * 8
-        index := index OR (cells[x,(y+1) mod Wrap].Result shl 2);       // below here * 4
-        index := index OR (cells[(x+1) mod Wrap,y].Result shl 1);       // right * 2
-        index := index OR (cells[x,(y+Wrap-1) mod Wrap].Result);         // above here
+        index := index OR (cells[(x+xsize-1) mod xsize,y].Result shl 3);   // left of here * 8
+        index := index OR (cells[x,(y+1) mod ysize].Result shl 2);         // below here * 4
+        index := index OR (cells[(x+1) mod xsize,y].Result shl 1);         // right * 2
+        index := index OR (cells[x,(y+ysize-1) mod ysize].Result);         // above here
         // figure out the input bits
         // this gets complicated... skip for right now....
 
@@ -116,10 +118,10 @@ var
 begin
   assign(f,filename);
   rewrite(f);
-  for y := 0 to wrap-1 do
+  for y := 0 to ysize-1 do
   begin
     s := '';
-    for x := 0 to wrap-1 do
+    for x := 0 to xsize-1 do
       s := s + inttohex(cells[x,y].Instruction,4) + ' ';
     writeln(f,s);
   end; // for y
@@ -138,28 +140,28 @@ var
 begin
   o.Clear;
   o.Append('Program State:');
-  for y := 0 to wrap-1 do
+  for y := 0 to ysize-1 do
   begin
     s := '';
-    for x := 0 to wrap-1 do
+    for x := 0 to xsize-1 do
       s := s + inttohex(cells[x,y].Instruction,4) + ' ';
     o.Append(s);
   end; // for y
 
   o.Append('Input State:');
-  for y := 0 to wrap-1 do
+  for y := 0 to ysize-1 do
   begin
     s := '';
-    for x := 0 to wrap-1 do
+    for x := 0 to xsize-1 do
       s := s + inttohex(cells[x,y].Index,4) + ' ';
     o.Append(s);
   end; // for y
 
   o.Append('Output State:');
-  for y := 0 to wrap-1 do
+  for y := 0 to ysize-1 do
   begin
     s := '';
-    for x := 0 to wrap-1 do
+    for x := 0 to xsize-1 do
       s := s + inttohex(cells[x,y].Result,4) + ' ';
     o.Append(s);
   end; // for y
@@ -170,10 +172,10 @@ var
   x,y : integer;
   s   : string;
 begin
-  for y := 0 to wrap-1 do
+  for y := 0 to ysize-1 do
   begin
     s := o.Strings[y];
-    for x := 0 to wrap-1 do
+    for x := 0 to xsize-1 do
       cells[x,y].Instruction := gethex(s);
   end; // for y
 end;
@@ -184,10 +186,10 @@ var
   s   : string;
 begin
   o.Clear;
-  for y := 0 to wrap-1 do
+  for y := 0 to ysize-1 do
   begin
     s := '';
-    for x := 0 to wrap-1 do
+    for x := 0 to xsize-1 do
       s := s + ' ' + inttohex(cells[x,y].Instruction,4);
     o.Append(s);
   end; // for y
@@ -209,7 +211,7 @@ var
   x,y : integer;
 initialization
   cycles := 0;
-  for x := 0 to wrap-1 do
-    for y := 0 to wrap-1 do
+  for x := 0 to xsize-1 do
+    for y := 0 to ysize-1 do
       cells[x,y] := TBitGridCell.Create;   // set up the cell
 end.
