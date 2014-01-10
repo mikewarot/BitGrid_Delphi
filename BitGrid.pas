@@ -34,6 +34,7 @@ type
     Instruction : integer;
     Index       : integer;
     Result      : integer;
+    Constructor Create;
   End;
 
 var
@@ -192,6 +193,13 @@ begin
   end; // for y
 end;
 
+Constructor TBitGridCell.Create;
+begin
+  Instruction := $ff00;     // default to copy from left input
+  Index       := 0;
+  Result := 0;
+end;
+
 //  $ff00  --- anything from the left
 //  $f0f0  --- anything from below
 //  $cccc  --- anything from the right
@@ -205,13 +213,5 @@ initialization
     for y := 0 to wrap-1 do
     begin
       cells[x,y] := TBitGridCell.Create;   // set up the cell
-      {
-        This isn't kosher, but works for now... we're directly stuffing
-        values into the internal fields of an object, instead
-        of letting it set itself up. This is transistion code that should go away
-      }
-      cells[x,y].Instruction := $ff00;     // default to just copy from the left
-      cells[x,y].Index := 0;
-      cells[x,y].Result := 0;
     end;
 end.
