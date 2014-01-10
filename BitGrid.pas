@@ -4,13 +4,6 @@ interface
 uses
   classes;
 
-const
-  wrap = 16;
-
-var
-  cells : array[0..wrap-1,0..wrap-1] of integer;
-  outs  : array[0..wrap-1,0..wrap-1] of integer;
-  ins   : array[0..wrap-1,0..wrap-1] of integer;
 
 procedure Compute_A;
 
@@ -22,15 +15,25 @@ procedure SaveTo(filename : string);
 
 function GetCycleCount : LongInt;
 
-procedure DumpStateTo(o : TStrings);
+procedure DumpStateTo(o : TStrings);       // dump the current cells, inputs, outputs to a list
+
+procedure LoadCellsFrom(o : TStrings);     // reload the program from a list
+
+procedure SaveCellsTo(o : TStrings);        // save program cells to a string list
 
 implementation
 
 uses
   sysutils;
 
+const
+  wrap = 8;
+
 var
   cycles : longint;
+  cells : array[0..wrap-1,0..wrap-1] of integer;
+  outs  : array[0..wrap-1,0..wrap-1] of integer;
+  ins   : array[0..wrap-1,0..wrap-1] of integer;
 
 procedure compute_a;
 var
@@ -152,6 +155,34 @@ begin
     s := '';
     for x := 0 to wrap-1 do
       s := s + inttohex(outs[x,y],4) + ' ';
+    o.Append(s);
+  end; // for y
+end;
+
+procedure LoadCellsFrom(o : TStrings);     // reload the program from a list
+var
+  x,y : integer;
+  s   : string;
+begin
+  for y := 0 to wrap-1 do
+  begin
+    s := o.Strings[y];
+    for x := 0 to wrap-1 do
+      cells[x,y] := gethex(s);
+  end; // for y
+end;
+
+procedure SaveCellsTo(o : TStrings);        // save program cells to a string list
+var
+  x,y : integer;
+  s   : string;
+begin
+  o.Clear;
+  for y := 0 to wrap-1 do
+  begin
+    s := '';
+    for x := 0 to wrap-1 do
+      s := s + ' ' + inttohex(cells[x,y],4);
     o.Append(s);
   end; // for y
 end;

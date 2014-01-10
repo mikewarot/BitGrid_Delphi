@@ -80,16 +80,8 @@ begin
 end;
 
 procedure TForm1.Memo2Exit(Sender: TObject);
-var
-  x,y : integer;
-  s   : string;
 begin
-  for y := 0 to wrap-1 do
-  begin
-    s := form1.Memo2.Lines.Strings[y];
-    for x := 0 to wrap-1 do
-      cells[x,y] := gethex(s);
-  end; // for y
+  LoadCellsFrom(form1.Memo2.Lines);
 end;
 
 procedure TForm1.Run1Click(Sender: TObject);
@@ -119,31 +111,13 @@ begin
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
-var
-  x,y : integer;
-  s   : string;
 begin
-  form1.Memo2.Lines.Clear;
-  for y := 0 to wrap-1 do
-  begin
-    s := '';
-    for x := 0 to wrap-1 do
-      s := s + ' ' + inttohex(cells[x,y],4);
-    form1.Memo2.lines.Append(s);
-  end; // for y
+  SaveCellsTo(form1.Memo2.Lines);
 end;
 
 procedure TForm1.Button4Click(Sender: TObject);
-var
-  x,y : integer;
-  s   : string;
 begin
-  for y := 0 to wrap-1 do
-  begin
-    s := form1.Memo2.Lines.Strings[y];
-    for x := 0 to wrap-1 do
-      cells[x,y] := gethex(s);
-  end; // for y
+  LoadCellsFrom(form1.Memo2.Lines);
 end;
 
 procedure TForm1.Exit1Click(Sender: TObject);
