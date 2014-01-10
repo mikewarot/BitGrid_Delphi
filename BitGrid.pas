@@ -1,6 +1,8 @@
 unit BitGrid;
 
 interface
+uses
+  classes;
 
 const
   wrap : integer = 8;
@@ -9,7 +11,6 @@ var
   cells : array[0..7,0..7] of integer;
   outs  : array[0..7,0..7] of integer;
   ins   : array[0..7,0..7] of integer;
-  cycles : longint;
 
 procedure Compute_A;
 
@@ -19,10 +20,17 @@ function GetHex(var s : string):integer;   // gets a hex string, killing any lea
 
 procedure SaveTo(filename : string);
 
+function GetCycleCount : LongInt;
+
+procedure DumpStateTo(o : TStrings);
+
 implementation
 
 uses
   sysutils;
+
+var
+  cycles : longint;
 
 procedure compute_a;
 var
@@ -109,7 +117,44 @@ begin
   close(f);
 end;
 
+function GetCycleCount : LongInt;
+begin
+  GetCycleCount := Cycles;
+end;
 
+procedure DumpStateTo(o : TStrings);
+var
+  x,y : integer;
+  s   : string;
+begin
+  o.Clear;
+  o.Append('Program State:');
+  for y := 0 to wrap-1 do
+  begin
+    s := '';
+    for x := 0 to wrap-1 do
+      s := s + inttohex(cells[x,y],4) + ' ';
+    o.Append(s);
+  end; // for y
+
+  o.Append('Input State:');
+  for y := 0 to wrap-1 do
+  begin
+    s := '';
+    for x := 0 to wrap-1 do
+      s := s + inttohex(ins[x,y],4) + ' ';
+    o.Append(s);
+  end; // for y
+
+  o.Append('Output State:');
+  for y := 0 to wrap-1 do
+  begin
+    s := '';
+    for x := 0 to wrap-1 do
+      s := s + inttohex(outs[x,y],4) + ' ';
+    o.Append(s);
+  end; // for y
+end;
 
 //  $ff00  --- anything from the left
 //  $f0f0  --- anything from below

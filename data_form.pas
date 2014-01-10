@@ -61,36 +61,10 @@ var
   x,y : integer;
   s   : string;
 begin
-  form1.Memo1.Lines.Clear;
-  form1.Memo1.Lines.Append('Program State:');
-  for y := 0 to wrap-1 do
-  begin
-    s := '';
-    for x := 0 to wrap-1 do
-      s := s + inttohex(cells[x,y],4) + ' ';
-    form1.Memo1.lines.Append(s);
-  end; // for y
+  DumpStateTo(form1.Memo1.Lines);
 
-  form1.Memo1.Lines.Append('Input State:');
-  for y := 0 to wrap-1 do
-  begin
-    s := '';
-    for x := 0 to wrap-1 do
-      s := s + inttohex(ins[x,y],4) + ' ';
-    form1.Memo1.lines.Append(s);
-  end; // for y
-
-  form1.Memo1.Lines.Append('Output State:');
-  for y := 0 to wrap-1 do
-  begin
-    s := '';
-    for x := 0 to wrap-1 do
-      s := s + inttohex(outs[x,y],4) + ' ';
-    form1.Memo1.lines.Append(s);
-  end; // for y
-
-  form1.statusbar1.panels[0].text := 'Cycles : '+IntToStr(cycles);
-  form1.StatusBar1.Panels[1].Text := 'Time   : '+FloatToStr(cycles / 1000.0)+' uSec';
+  form1.statusbar1.panels[0].text := 'Cycles : '+IntToStr(GetCycleCount);
+  form1.StatusBar1.Panels[1].Text := 'Time   : '+FloatToStr(GetCycleCount / 1000.0)+' uSec';
   form1.StatusBar1.Panels[2].Text := CurrentFileName+ '        '; // accomodate junk in lower right corner
 end; // dump_stuff
 
