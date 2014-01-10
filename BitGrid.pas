@@ -5,12 +5,12 @@ uses
   classes;
 
 const
-  wrap : integer = 8;
+  wrap = 16;
 
 var
-  cells : array[0..7,0..7] of integer;
-  outs  : array[0..7,0..7] of integer;
-  ins   : array[0..7,0..7] of integer;
+  cells : array[0..wrap-1,0..wrap-1] of integer;
+  outs  : array[0..wrap-1,0..wrap-1] of integer;
+  ins   : array[0..wrap-1,0..wrap-1] of integer;
 
 procedure Compute_A;
 
