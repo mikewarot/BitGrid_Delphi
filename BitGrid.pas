@@ -46,6 +46,23 @@ var
   cycles : longint;
   cells : array[0..xsize-1,0..ysize-1] of TBitGridCell;
 
+function describe(instruction : integer) : string;
+var
+  s : string;
+begin
+  s := IntToHex(instruction,4);
+  case instruction of
+    0      :  s := '#false';
+    $ffff  :  s := '#true';
+    $ff00  :  s := '#left';
+    $f0f0  :  s := '#below';
+    $cccc  :  s := '#right';
+    $aaaa  :  s := '#above';
+  end; // case Instruction
+  describe := s;
+end;
+
+
 procedure compute_a;
 var
   x,y : integer;
@@ -124,7 +141,7 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
-      s := s + inttohex(cells[x,y].Instruction[0],4) + ' ';
+      s := s + describe(cells[x,y].Instruction[0]) + ' ';
     o.Append(s);
   end; // for y
 
@@ -201,6 +218,7 @@ begin
   Outputs[1] := (index AND (instruction[1])) <> 0;
   Outputs[0] := (index AND (instruction[0])) <> 0;
 end;
+
 
 
 //  $ff00  --- anything from the left
