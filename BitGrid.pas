@@ -28,7 +28,7 @@ uses
 
 type
   TBitGridCell = Class(TObject)
-    Instruction : integer;
+    Instruction : Array[0..3] of integer;   // 4 in, 4 out lut
     Index       : integer;
     Inputs      : Array[0..3] of ^Boolean;  // allow for non-uniform stuff later
     Outputs     : Array[0..3] of Boolean;
@@ -102,7 +102,7 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
-      s := s + inttohex(cells[x,y].Instruction,4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction[0],4) + ' ';
     writeln(f,s);
   end; // for y
   close(f);
@@ -124,7 +124,7 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
-      s := s + inttohex(cells[x,y].Instruction,4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction[0],4) + ' ';
     o.Append(s);
   end; // for y
 
@@ -156,7 +156,7 @@ begin
   begin
     s := o.Strings[y];
     for x := 0 to xsize-1 do
-      cells[x,y].Instruction := gethex(s);
+      cells[x,y].Instruction[0] := gethex(s);
   end; // for y
 end;
 
@@ -170,14 +170,17 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
-      s := s + ' ' + inttohex(cells[x,y].Instruction,4);
+      s := s + ' ' + inttohex(cells[x,y].Instruction[0],4);
     o.Append(s);
   end; // for y
 end;
 
 Constructor TBitGridCell.Create;
 begin
-  Instruction := $ff00;     // default to copy from left input
+  Instruction[3] := $cccc;     // left output is copy of right input
+  Instruction[2] := $aaaa;     // bottom output is copy of upper input
+  Instruction[1] := $ff00;     // right output is copy of left input
+  Instruction[0] := $f0f0;     // top output is copy of bottom input
   Index       := 0;
   Inputs[3] := @AlwaysFalse; // left- default to a false input, for safety.
   Inputs[2] := @AlwaysFalse; // below
@@ -193,10 +196,10 @@ begin
   if inputs[1]^ then index := index shl 2;
   if inputs[0]^ then index := index shl 1;
 
-  Outputs[3] := (index AND (instruction)) <> 0;
-  Outputs[2] := (index AND (instruction)) <> 0;
-  Outputs[1] := (index AND (instruction)) <> 0;
-  Outputs[0] := (index AND (instruction)) <> 0;
+  Outputs[3] := (index AND (instruction[3])) <> 0;
+  Outputs[2] := (index AND (instruction[2])) <> 0;
+  Outputs[1] := (index AND (instruction[1])) <> 0;
+  Outputs[0] := (index AND (instruction[0])) <> 0;
 end;
 
 
