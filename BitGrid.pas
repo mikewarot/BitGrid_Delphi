@@ -37,8 +37,8 @@ type
   End;
 
 const
-  xsize = 6;
-  ysize = 5;
+  xsize = 8;
+  ysize = 8;
   alwaysfalse : boolean = false;    // default to this for inputs
   alwaystrue  : boolean = true;
 
