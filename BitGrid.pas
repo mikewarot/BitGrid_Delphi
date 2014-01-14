@@ -119,7 +119,12 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
+    begin
       s := s + inttohex(cells[x,y].Instruction[0],4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction[1],4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction[2],4) + ' ';
+      s := s + inttohex(cells[x,y].Instruction[3],4) + '    ';
+    end;
     writeln(f,s);
   end; // for y
   close(f);
@@ -141,7 +146,12 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
+    begin
       s := s + describe(cells[x,y].Instruction[0]) + ' ';
+      s := s + describe(cells[x,y].Instruction[1]) + ' ';
+      s := s + describe(cells[x,y].Instruction[2]) + ' ';
+      s := s + describe(cells[x,y].Instruction[3]) + '     ';
+    end;
     o.Append(s);
   end; // for y
 
@@ -159,7 +169,12 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
+    begin
       s := s + BoolToStr(cells[x,y].Outputs[0]) + ' ';
+      s := s + BoolToStr(cells[x,y].Outputs[1]) + ' ';
+      s := s + BoolToStr(cells[x,y].Outputs[2]) + ' ';
+      s := s + BoolToStr(cells[x,y].Outputs[3]) + '     ';
+    end;
     o.Append(s);
   end; // for y
 end;
@@ -173,7 +188,12 @@ begin
   begin
     s := o.Strings[y];
     for x := 0 to xsize-1 do
+    begin
       cells[x,y].Instruction[0] := gethex(s);
+      cells[x,y].Instruction[1] := gethex(s);
+      cells[x,y].Instruction[2] := gethex(s);
+      cells[x,y].Instruction[3] := gethex(s);
+    end;
   end; // for y
 end;
 
@@ -187,7 +207,12 @@ begin
   begin
     s := '';
     for x := 0 to xsize-1 do
+    begin
       s := s + ' ' + inttohex(cells[x,y].Instruction[0],4);
+      s := s + ' ' + inttohex(cells[x,y].Instruction[1],4);
+      s := s + ' ' + inttohex(cells[x,y].Instruction[2],4);
+      s := s + ' ' + inttohex(cells[x,y].Instruction[3],4)+ '    ';
+    end;
     o.Append(s);
   end; // for y
 end;
